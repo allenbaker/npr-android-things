@@ -40,5 +40,18 @@ public class BoardDefaults {
                 throw new IllegalStateException("Unknown Build.DEVICE " + Build.DEVICE);
         }
     }
+
+    public static String getI2cBus() {
+        switch (Build.DEVICE) {
+            case DEVICE_RPI3:
+                return "I2C1";
+            case DEVICE_IMX6UL_PICO:
+                return "I2C2";
+            case DEVICE_IMX7D_PICO:
+                return "I2C1";
+            default:
+                throw new IllegalArgumentException("Unknown device: " + Build.DEVICE);
+        }
+    }
 }
 

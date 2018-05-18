@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.KeyEvent
 import com.google.android.things.contrib.driver.button.Button
 import com.google.android.things.contrib.driver.button.ButtonInputDriver
+import com.google.android.things.contrib.driver.ht16k33.AlphanumericDisplay
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManager
 import java.io.IOException
@@ -42,6 +43,7 @@ class HomeActivity : Activity() {
     private var buttonC: ButtonInputDriver? = null
     private val mediaPlayer = MediaPlayer()
     private var lastPosition : Int = 0
+    private var display: AlphanumericDisplay? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,9 +52,22 @@ class HomeActivity : Activity() {
 
         val pioService = PeripheralManager.getInstance()
         try {
+            display = AlphanumericDisplay(BoardDefaults.getI2cBus())
+            display!!.setEnabled(true)
+            display!!.clear()
+//            display!!.display("NPR")
+            display!!.writeColumn(0, 55)
+
+            display!!.writeColumn(1, 243)
+            display!!.writeColumn(2, 49)
+
+
+//            display!!.writeColumn(0, 1)
+
             Log.i(TAG, "Configuring GPIO pins")
             mLedGpio = pioService.openGpio(BoardDefaults.getGPIOForLED())
-            mLedGpio!!.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW)
+            mLedGpio!!.value = true
+            //mLedGpio!!.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW)
 
         } catch (e: IOException) {
             Log.e(TAG, "Error configuring GPIO pins", e)
